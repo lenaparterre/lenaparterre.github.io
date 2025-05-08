@@ -1,0 +1,27 @@
+name: "Site_veloETbobo"
+navbar:
+  left:
+    - text: "Introduction"
+      href: 01_veloETbobo_intro.html
+    - text: "Bordeaux"
+      href: 02_bdx.html
+    - text: "Usage du vélo en Charente Maritime"
+      href: 03_ChMv2.html
+    - text: "Accidents en Charente Maritime"
+      href: 04_ChM_acc.html
+    - text: "Resultats"
+      href: 04_result.html
+
+  right:
+    - icon: fa-github
+      href: https://github.com/beababa/beababa.github.io
+output:
+  html_document:
+    toc_float: TRUE
+    theme: united
+    highlight: tango
+    include:
+      after_body: footer.html
+    number_sections: yes
+    exclude: [data-raw, data]
+    css: css/styles.css
