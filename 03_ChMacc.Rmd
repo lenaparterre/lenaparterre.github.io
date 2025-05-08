@@ -1,0 +1,90 @@
+---
+title: "03_ChMacc"
+author: "Léna et Victor"
+date: "2025-05-07"
+output: 
+  html_document: 
+    number_sections: yes
+    toc: yes
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  cache = TRUE,
+  eval = TRUE,
+  warning = FALSE
+)
+```
+
+
+```{r library, include=FALSE}
+#Charger les packages utiles
+library(dplyr)
+library(sf)
+library(readr)
+library(mapview)
+library(mapsf)
+library(tmap)
+```
+
+```{r data}
+#Importer les données
+#Importer les données spatiales
+
+geo <- st_read("C:/Users/morea/OneDrive/Documents/00. APPRENDRE/L3 - Géographie/S2 - 03 - SIG/Ressources carto/communes.geojson")
+
+#Importer les données d'accidentologie (préalablement triées et filtrées sur Excel)
+
+df_nb_acc <- read.csv2("C:/Users/morea/OneDrive/Documents/00. APPRENDRE/L3 - Géographie/S2 - 03 - SIG/Ressources Data/acc_velo_dpt17_2019-2023.csv") 
+
+```
+
+
+```{r join}
+#Traitement de données 
+#Convertir le type de donnée
+df_nb_acc$code_insee <- as.character(df_nb_acc$code_insee)
+geo$code_insee <- as.character(geo$code_insee)
+
+#Jointure attributaire
+geo_nb_acc <- geo %>%
+  left_join(df_nb_acc, by = "code_insee")
+```
+
+
+```{r carto1}
+#Representer le nombre d'accidents
+library(sf)
+nb_acc_velo <- st_centroid(geo_nb_acc)
+# Vérification : présence de la variable nb_acc_velo_2019
+nb_acc_velo$nb_acc_velo_2019 <- geo_nb_acc$nb_acc_velo_2019
+
+library(tmap)
+tmap_mode("plot")
+tm_shape(geo) +
+  tm_polygons(fill.alpha = 0.2, border.col = "grey70", col = "grey80" )+
+  tm_shape(nb_acc_velo) +
+  tm_symbols(size = "nb_acc_velo_2019", border.col = "red", col = "red") +
+  tm_layout(main.title = "Nombre d'accidents en vélo par communes de Charente-Maritime en 2019 (ONISR)")
+```
+
+
+```{r carto2}
+# Représenter l'évolution de la sécurité à vélo (2019-2023)
+
+library(tmap)
+tmap_mode("plot")
+evo_palette <- c("#0000FF", "#ADD8E6", "#FFFF00", "#FF8000")
+
+tm_shape(geo_nb_acc) +
+  tm_polygons("evolution", 
+              style = "jenks",
+              n = 4,
+              palette = evo_palette,
+              title = "Evolution de l'accidentologie (%) en vélo entre 2019 et 2023") +   
+  tm_layout(main.title = "Evolution de la sécurité routière cycliste en Charente Maritime (2019-2023)")
+

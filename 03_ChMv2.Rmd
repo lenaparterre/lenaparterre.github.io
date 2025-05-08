@@ -36,7 +36,7 @@ library(tmap)
 #Importer les données spatiales
 
 geo <-st_read("C:/Users/morea/OneDrive/Documents/00. APPRENDRE/L3 - Géographie/S2 - 03 - SIG/Ressources carto/communes.geojson")
-pistes <-st_read("C:/Users/morea/OneDrive/Documents/00. APPRENDRE/L3 - Géographie/S2 - 03 - SIG/Ressources carto/ame_velo_dept17.geojson")
+amgt <-st_read("C:/Users/morea/OneDrive/Documents/00. APPRENDRE/L3 - Géographie/S2 - 03 - SIG/Ressources carto/ame_velo_dept17.geojson")
 
 
 #Importer la base de données
@@ -58,7 +58,7 @@ library(tmap)
 tmap_mode("plot")
 tm_shape(geo) +
   tm_polygons(fill.alpha = 0.2, border.col = "grey70", col = "grey80" )+
-  tm_shape(pistes)+
+  tm_shape(amgt)+
   tm_lines(col = "#49006a")+
   tm_layout(main.title = "Aménagements cyclables en Charente-Maritime")
 ```
